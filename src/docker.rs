@@ -22,7 +22,7 @@ use container::{Container, ContainerInfo};
 use process::{Process, Top};
 use stats::StatsReader;
 use system::SystemInfo;
-use image::{Image, ImageStatus};
+use image::{Image, ImageStatus, ImageAction};
 use filesystem::FilesystemChange;
 use version::Version;
 
@@ -266,6 +266,21 @@ impl Docker {
             Ok(body) => {
                 match json::decode::<Vec<Image>>(&body) {
                     Ok(images) => Ok(images),
+                    Err(e) => Err(std::io::Error::new(std::io::ErrorKind::InvalidData, e.description()))
+                }
+            },
+            Err(e) => Err(std::io::Error::new(std::io::ErrorKind::Other, e.description()))
+        }
+    }
+
+    pub fn delete_image(&self, image: Image) -> std::io::Result<Vec<ImageAction>> {
+        let request_url = self.get_url(format!("/images/{}", image.Id));
+        let request = self.build_get_request(request_url);
+
+        match self.execute_request(request) {
+            Ok(body) => {
+                match json::decode::<Vec<ImageAction>>(&body) {
+                    Ok(status) => Ok(status),
                     Err(e) => Err(std::io::Error::new(std::io::ErrorKind::InvalidData, e.description()))
                 }
             },
