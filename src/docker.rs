@@ -55,6 +55,14 @@ impl Docker {
         return Ok(docker);
     }
 
+    pub fn connect_with_http(addr: String) -> Result<Docker, std::io::Error> {
+        let client_addr = addr.clone().replace("tcp://", "http://");
+
+        let docker = Docker { client: Client::new(), client_type: ClientType::Tcp, client_addr: client_addr };
+
+        return Ok(docker);
+    }
+
     pub fn connect_with_ssl(addr: String, ssl_key: &Path, ssl_cert: &Path, ssl_ca: &Path) -> Result<Docker, SslError> {
         // This ensures that using docker-machine-esque addresses work with Hyper.
         let client_addr = addr.clone().replace("tcp://", "https://");
