@@ -106,6 +106,10 @@ impl Docker {
         self.client.post(&*request_url)
     }
 
+    fn build_delete_request(&self, request_url: String) -> RequestBuilder {
+        self.client.delete(&*request_url)
+    }
+
     fn execute_request(&self, request: RequestBuilder) -> Result<String, hyper::error::Error> {
         match request.send() {
             Ok(mut response) => {
@@ -273,9 +277,18 @@ impl Docker {
         }
     }
 
-    pub fn delete_image(&self, image: Image) -> std::io::Result<Vec<ImageAction>> {
-        let request_url = self.get_url(format!("/images/{}", image.Id));
-        let request = self.build_get_request(request_url);
+    pub fn delete_image(&self, image: Image, force: bool, noprune: bool) -> std::io::Result<Vec<ImageAction>> {
+        let force_str = match force {
+            true => "1",
+            false => "0"
+        };
+        let noprune_str = match noprune {
+            true => "1",
+            false => "0"
+        };
+
+        let request_url = self.get_url(format!("/images/{}?force={}&noprune={}", image.Id, force_str, noprune_str));
+        let request = self.build_delete_request(request_url);
 
         match self.execute_request(request) {
             Ok(body) => {
