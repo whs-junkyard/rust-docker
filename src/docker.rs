@@ -9,13 +9,19 @@ use hyper::Client;
 use hyper::client::RequestBuilder;
 use hyper::client::pool::{Config, Pool};
 use hyper::client::response::Response;
+#[cfg(feature="ssl")]
 use hyper::net::HttpsConnector;
+#[cfg(feature="ssl")]
 use hyper::net::Openssl;
 
+#[cfg(feature="unix")]
 use unix::HttpUnixConnector;
 
+#[cfg(feature="ssl")]
 use openssl::ssl::{SslContext, SslMethod};
+#[cfg(feature="ssl")]
 use openssl::ssl::error::SslError;
+#[cfg(feature="ssl")]
 use openssl::x509::X509FileType;
 
 use container::{Container, ContainerInfo};
@@ -29,6 +35,7 @@ use version::Version;
 use rustc_serialize::json;
 
 enum ClientType {
+    #[cfg(feature="unix")]
     Unix,
     Tcp,
 }
@@ -40,6 +47,7 @@ pub struct Docker {
 }
 
 impl Docker {
+    #[cfg(feature="unix")]
     pub fn connect_with_unix(addr: String) -> Result<Docker, std::io::Error> {
         // This ensures that using a fully-qualified path -- e.g. unix://.... -- works.  The unix
         // socket provider expects a Path, so we don't need scheme.
@@ -63,6 +71,7 @@ impl Docker {
         return Ok(docker);
     }
 
+    #[cfg(feature="ssl")]
     pub fn connect_with_ssl(addr: String, ssl_key: &Path, ssl_cert: &Path, ssl_ca: &Path) -> Result<Docker, SslError> {
         // This ensures that using docker-machine-esque addresses work with Hyper.
         let client_addr = addr.clone().replace("tcp://", "https://");
@@ -86,6 +95,7 @@ impl Docker {
     fn get_url(&self, path: String) -> String {
         let mut base = match self.client_type {
             ClientType::Tcp => self.client_addr.clone(),
+            #[cfg(feature="unix")]
             ClientType::Unix => {
                 // We need a host so the HTTP headers can be generated, so we just spoof it and say
                 // that we're talking to localhost.  The hostname doesn't matter one bit.

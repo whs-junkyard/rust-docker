@@ -12,6 +12,11 @@ keywords = ["docker"]
 
 [dependencies]
 hyper = "^0.9"
-openssl = "^0.7"
-unix_socket = "^0.5"
+openssl = { version="^0.7", optional=true }
+unix_socket = { version="^0.5", optional=true }
 rustc-serialize = "0.3.19"
+
+[features]
+default = ["unix"]
+ssl = ["openssl"]
+unix = ["unix_socket"]
