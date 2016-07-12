@@ -39,14 +39,14 @@ impl Clone for ImageStatus {
     }
 }
 
-#[derive(RustcEncodable, RustcDecodable)]
+#[derive(RustcEncodable, RustcDecodable, Debug)]
 #[allow(non_snake_case)]
-pub struct ImageAction {
+pub struct ImageDeleteAction {
     pub Untagged: Option<String>,
     pub Deleted: Option<String>,
 }
 
-impl Clone for ImageAction {
+impl Clone for ImageDeleteAction {
     fn clone(&self) -> Self {
         ImageAction {
             Untagged: self.Untagged.clone(),

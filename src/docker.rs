@@ -287,7 +287,7 @@ impl Docker {
         }
     }
 
-    pub fn delete_image(&self, tag: String, force: bool, noprune: bool) -> std::io::Result<Vec<ImageAction>> {
+    pub fn delete_image(&self, tag: String, force: bool, noprune: bool) -> std::io::Result<Vec<ImageDeleteAction>> {
         let force_str = match force {
             true => "1",
             false => "0"
