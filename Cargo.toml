@@ -11,12 +11,12 @@ readme = "README.md"
 keywords = ["docker"]
 
 [dependencies]
-hyper = "^0.9"
+hyper = { version="^0.9", default-features=false }
 openssl = { version="^0.7", optional=true }
 unix_socket = { version="^0.5", optional=true }
 rustc-serialize = "0.3.19"
 
 [features]
 default = ["unix"]
-ssl = ["openssl"]
+ssl = ["openssl", "hyper/ssl"]
 unix = ["unix_socket"]
