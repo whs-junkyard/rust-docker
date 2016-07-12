@@ -28,7 +28,7 @@ use container::{Container, ContainerInfo};
 use process::{Process, Top};
 use stats::StatsReader;
 use system::SystemInfo;
-use image::{Image, ImageStatus, ImageAction};
+use image::{Image, ImageStatus, ImageDeleteAction};
 use filesystem::FilesystemChange;
 use version::Version;
 
@@ -302,7 +302,7 @@ impl Docker {
 
         match self.execute_request(request) {
             Ok(body) => {
-                match json::decode::<Vec<ImageAction>>(&body) {
+                match json::decode::<Vec<ImageDeleteAction>>(&body) {
                     Ok(status) => Ok(status),
                     Err(e) => Err(std::io::Error::new(std::io::ErrorKind::InvalidData, e.description()))
                 }

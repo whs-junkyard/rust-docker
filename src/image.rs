@@ -48,7 +48,7 @@ pub struct ImageDeleteAction {
 
 impl Clone for ImageDeleteAction {
     fn clone(&self) -> Self {
-        ImageAction {
+        ImageDeleteAction {
             Untagged: self.Untagged.clone(),
             Deleted: self.Deleted.clone()
         }
