@@ -1,7 +1,5 @@
 use std;
 use std::error::Error;
-use std::path::Path;
-use std::sync::Arc;
 use std::io::Read;
 
 use hyper;

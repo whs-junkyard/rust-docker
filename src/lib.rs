@@ -11,6 +11,7 @@ extern crate rustc_serialize;
 
 // declare modules
 mod test;
+#[cfg(test)]
 mod util;
 #[cfg(feature="unix")]
 mod unix;

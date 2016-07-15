@@ -1,5 +1,4 @@
 use std;
-use std::error::Error;
 use std::collections::HashMap;
 
 #[derive(RustcEncodable, RustcDecodable)]
@@ -77,7 +76,7 @@ impl Clone for Container {
             Labels: self.Labels.clone(),
             HostConfig: self.HostConfig.clone()
         };
-        
+
         return container;
     }
 }

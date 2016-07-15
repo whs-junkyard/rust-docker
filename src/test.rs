@@ -75,7 +75,7 @@ fn get_stats_streaming() {
     }
 
     match reader.next() {
-        Ok(stats) => { assert!(false); return },
+        Ok(_) => { assert!(false); return },
         Err(_) => { assert!(true) }
     }
 }
@@ -189,11 +189,11 @@ fn get_stats_response() -> String {
 
     let stream = MemoryStream::with_input(headers.as_bytes());
     let mut writer = HttpWriter::ChunkedWriter(stream);
-    writer.write(s1.as_bytes());
-    writer.write(b"\n");
-    writer.write(s2.as_bytes());
-    writer.write(b"\n");
-    writer.write(s3.as_bytes());
+    writer.write(s1.as_bytes()).unwrap();
+    writer.write(b"\n").unwrap();
+    writer.write(s2.as_bytes()).unwrap();
+    writer.write(b"\n").unwrap();
+    writer.write(s3.as_bytes()).unwrap();
 
     let buf = match writer.end() {
         Ok(w) => w,
